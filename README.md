@@ -10,7 +10,7 @@ someone the "voicemail."
 Or you're like me, and mom won't stop calling you during lectures and work, and
 you're tired of picking up to tell her you're not dead and are actually working.
 
-## Run
+## Run!
 ```
 > python app.py
 ...
