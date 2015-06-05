@@ -1,6 +1,8 @@
 import os
 
+from datetime import datetime
 from flask import Flask, Response, request, render_template
+from pytz import timezone
 from twilio import twiml
 from twilio.rest import TwilioRestClient
 
@@ -9,14 +11,16 @@ TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_NUMBER = os.environ.get("TWILIO_NUMBER")
 
-# create an authenticated client that can make requests to Twilio for your
-# account.
+# Timezone of user (Twilio number owner).
+USER_TIMEZONE = timezone('US/Pacific')
+
+# Create an authenticated client to make requests to Twilio.
 client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# Flask
 app = Flask(__name__)
 
 # Dummy test data.
+# TODO: Move.
 rules = {
     "+14134062242": {
         "condition": "always",
@@ -28,6 +32,14 @@ rules = {
         },
     "+19193608390": {
         "condition": "time",
+        "busy_intervals": [
+            { "label": "work",
+                "start": "09:00:00",
+                "end": "17:00:00"},
+            { "label": "sleep",
+                "start": "24:00:00",
+                "end": "08:00:00"},
+            ],
         "response": {
             "type": "audio",
             "data": "static/audio/recording.mp3"
@@ -63,14 +75,26 @@ def secretary():
     if caller_rule["condition"] == "always":
         resp = create_response(caller_rule["response"], resp)
     elif caller_rule["condition"] == "time":
-        # TODO: Figure out how the time condition will work.
-        pass
+        for interval in caller_rule["busy_intervals"]:
+            if is_time_in_interval(interval):
+                resp.say("I am currently " + interval["label"])
+            else:
+                resp.dial("+19193608311")
 
     if caller_rule["take_message"]:
         resp.say("Leave a message after the tone. Please press pound
                 when you're done.")
         resp.record(playBeep=True, maxLength="90", finishOnKey="#")
     return str(resp)
+
+def is_time_in_interval(interval):
+    current_local_time = datetime.now(USER_TIMEZONE)
+    standardized_time = datetime.strptime(
+            current_local_time.strftime("%X"), "%X")
+    start_time = datetime.strptime(interval["start"], "%X")
+    end_time = datetime.strptime(interval["end"], "%X")
+
+    return start <= t and t <= end
 
 def get_rule_for_call(request):
     from_number = request.values.get("From", None)
