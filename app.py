@@ -24,7 +24,7 @@ app = Flask(__name__)
 @app.route("/", methods=["GET"])
 def main():
     # TODO: All the frontend dashboard stuff.
-    return "Hello World"
+    return render_template("index.html")
 
 @app.route("/secretary", methods=["POST"])
 def secretary():
@@ -46,7 +46,7 @@ def secretary():
                 resp.dial("+19193608311")
 
     if caller_rule["take_message"]:
-        resp.say("Leave a message after the tone. Please press pound
+        resp.say("Leave a message after the tone. Please press pound \
                 when you're done.")
         resp.record(playBeep=True, maxLength="90", finishOnKey="#")
     return str(resp)
