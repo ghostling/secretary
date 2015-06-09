@@ -1,7 +1,8 @@
 import os
 
 from datetime import datetime
-from flask import Flask, Response, request, render_template
+from flask import Flask, Response, request, render_template, url_for
+from firebase import firebase
 from pytz import timezone
 from twilio import twiml
 from twilio.rest import TwilioRestClient
@@ -12,6 +13,7 @@ from testdata import TEST_RULES
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_NUMBER = os.environ.get("TWILIO_NUMBER")
+FIREBASE_SECRET = os.environ.get("FIREBASE_SECRET")
 
 # Timezone of user (Twilio number owner).
 USER_TIMEZONE = timezone('US/Pacific')
@@ -19,12 +21,19 @@ USER_TIMEZONE = timezone('US/Pacific')
 # Create an authenticated client to make requests to Twilio.
 client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
+# Connect to Firebase
+fb = firebase.FirebaseApplication("https://twilio-secretary.firebaseio.com", None)
+
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
-def main():
-    # TODO: All the frontend dashboard stuff.
-    return render_template("index.html")
+def index():
+    twilio_number = fb.get("/twilio-number", None)
+    personal_number = fb.get("/personal-number", None)
+
+    return render_template("index.html", 
+            twilioNumber=twilio_number,
+            personalNumber=personal_number)
 
 @app.route("/secretary", methods=["POST"])
 def secretary():
