@@ -1,11 +1,14 @@
 <html>
   <head>
     <script src="static/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="static/bower_components/uikit/js/uikit.min.js"></script>
-    <script src="static/custom/js/custom.js"></script>
+    <script src="static/js/uikit.js"></script>
+    <script src="static/js/custom.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="static/bower_components/uikit/css/uikit.min.css"></link>
-    <link rel="stylesheet" type="text/css" href="static/custom/css/custom.css"></link>
+    <link rel="stylesheet" type="text/css" href="static/css/uikit.css"></link>
+    <link rel="stylesheet" type="text/css" href="static/css/uikit.gradient.css"></link>
+    <link rel="stylesheet" type="text/css" href="static/css/uikit.almost-flat.css"></link>
+    <link rel="stylesheet" type="text/css" href="static/css/components/form-advanced.css"></link>
+    <link rel="stylesheet" type="text/css" href="static/css/custom.css"></link>
 
     <title>Secretary</title>
   </head>
@@ -45,13 +48,8 @@
           <div class="uk-flex uk-flex-top uk-flex-space-between">
             <h1>Rules</h1>
             <button class="uk-button uk-button-success uk-button-large uk-flex-right" data-uk-modal="{target:'#create-rule-modal'}">+ Create</button>
-            <div id="create-rule-modal" class="uk-modal">
-              <div class="uk-modal-dialog">
-                <a class="uk-modal-close uk-close"></a>
-                <div class="uk-modal-header"><h2>Create Rule</h2></div>
-                <p>Hi</p>
-              </div>
-            </div>
+
+            {% include 'create_rule_modal.html' %}
           </div>
           <table class="uk-table uk-table-striped">
             <thead>
