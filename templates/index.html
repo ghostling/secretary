@@ -2,7 +2,9 @@
   <head>
     <script src="static/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="static/js/uikit.js"></script>
-    <script src="static/js/custom.js"></script>
+    <script src="static/js/components/autocomplete.js"></script>
+    <script src="static/js/components/timepicker.js"></script>
+    <script src="static/js/components/accordion.js"></script>
 
     <link rel="stylesheet" type="text/css" href="static/css/uikit.css"></link>
     <link rel="stylesheet" type="text/css" href="static/css/uikit.gradient.css"></link>
@@ -16,7 +18,8 @@
     <nav class="uk-navbar">
       <a class="uk-navbar-brand" href="#"><strong>Secretary</strong></a>
       <div class="uk-navbar-flip uk-navbar-content uk-display-inline-block">
-        <button class="uk-button uk-button-primary">Help</button>
+        <button class="uk-button uk-button-primary" data-uk-modal="{target: '#help-modal'}">Help</button>
+        {% include 'help_modal.html' %}
       </div>
     </nav>
     <div class="main-content">
@@ -48,7 +51,6 @@
           <div class="uk-flex uk-flex-top uk-flex-space-between">
             <h1>Rules</h1>
             <button class="uk-button uk-button-success uk-button-large uk-flex-right" data-uk-modal="{target:'#create-rule-modal'}">+ Create</button>
-
             {% include 'create_rule_modal.html' %}
           </div>
           <table class="uk-table uk-table-striped">
@@ -71,4 +73,5 @@
       </div>
     </div>
   </body>
+    <script src="static/js/custom.js"></script>
 </html>

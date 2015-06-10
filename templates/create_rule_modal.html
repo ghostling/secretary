@@ -3,122 +3,128 @@
   <div class="uk-modal-dialog">
     <a class="uk-modal-close uk-close"></a>
     <div class="uk-modal-header"><h2>Create Rule</h2></div>
-      <form class="uk-form">
-        <div class="uk-form-row uk-form-horizontal">
-          <label class="uk-form-label uk-text-large" for="form-caller-number">For </label>
-          <div class="uk-form-controls">
-            <input type="text" id="form-caller-numbers" class="uk-form-large uk-form-width-large" placeholder="Enter caller's number or * for everyone else">
-          </div>
+    <form class="uk-form">
+      <div class="uk-form-row uk-form-horizontal">
+        <label class="uk-form-label uk-text-large" for="form-caller-number">For this caller:</label>
+        <div class="uk-form-controls">
+          <input type="text" id="form-caller-numbers" class="uk-form-large uk-form-width-large" placeholder="Enter caller's number or * for everyone else">
         </div>
-        <div class="uk-form-row">
-          <div class="uk-form-controls">
-            <!-- Always Condition -->
-            <input type="radio" id="form-call-condition-always" name="radio-condition">
-            <label for="form-call-condition-always" class=" uk-form-label uk-text-large">Always</label>
-            <!-- Always Sub-form -->
-            <div class="sub-form">
-              <div class="uk-form-controls">
-                <!-- Forward Options -->
-                <div class="uk-panel-box">
-                  <div class="uk-grid uk-grid-small">
-                    <div class="uk-width-1-4">
-                      <input type="radio" id="form-always-forward" name="radio-always-action">
-                      <label for="form-always-forward">Forward</label>
-                    </div>
-                    <div class="uk-width-3-4">
-                      <input type="text" id="form-always-forward-number" class="uk-form-large uk-form-width-large" value="{{personalNumber}}"></input>
-                    </div>
-                  </div>
-                </div>
-                <br>
-                <!-- Play Options -->
-                <div class="uk-panel-box">
-                  <div class="uk-grid uk-grid-small">
-                    <div class="uk-width-1-4">
-                      <input type="radio" id="form-always-play" name="radio-always-action">
-                      <label for="form-always-play">Play</label>
-                    </div>
-                    <div class="uk-width-1-4">
-                      <select class="uk-form-large uk-form-width-large">
-                        <option>Text</option>
-                        <option>Audio</option>
-                      </select>
-                    </div>
-                    <div class="uk-width-1-2">
-                      <input type="text" id="form-always-play-data" class="uk-form-large uk-form-width-large" placeholder="Enter message to play to caller"></input>
-                    </div>
-                  </div>
-                  <div class="uk-grid uk-grid-small">
-                    <div class="uk-width-1-4"></div>
-                    <div class="uk-width-3-4">
-                      <input type="checkbox" id="form-always-take-message">
-                      <label for="form-always-take-message">Take Message</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Time Condition -->
-            <input type="radio" id="form-call-condition-time" name="radio-condition">
-            <label for="form-call-condition-time" class="uk-form-label uk-text-large">Time Based</label>
-            <div class="sub-form">
-              <!-- Busy Times -->
+      </div>
+      <hr>
+      <div class="uk-form-row">
+        <div class="uk-form-controls">
+          <h3 class="uk-text-primary">Rule Type</h3>
+          <!-- Always Condition -->
+          <input type="radio" id="form-call-condition-always" name="radio-condition" checked="checked">
+          <label for="form-call-condition-always" class=" uk-form-label uk-text-large">Always</label>
+          <!-- Always Sub-form -->
+          <div class="sub-form" id="condition-always-sub-form">
+            <div class="uk-form-controls">
+              <!-- Forward Options -->
               <div class="uk-panel-box">
                 <div class="uk-grid uk-grid-small">
-                  <div class="uk-width-3-4">
-                    Enter busy times:
-                  </div>
-                  <div class="uk-width-1-4 uk-flex uk-flex-space-between">
-                    <h3><!-- Dummy element for flex --></h3>
-                    <button class="uk-button uk-button-success uk-flex-right">+</button>
-                  </div>
-                </div>
-                <div class="uk-grid uk-grid-small">
-                  <div class="uk-width-1-3">
-                    <input type="text" placeholder="Start time">
-                  </div>
-                  <div class="uk-width-1-3">
-                    <input type="text" placeholder="End time">
-                  </div>
-                  <div class="uk-width-1-3">
-                    <input type="text" placeholder="Label">
+                  <div class="uk-width-1-1">
+                    <input type="radio" id="form-always-forward" name="radio-always-action">
+                    <label for="form-always-forward">
+                      Forward call to your real number.
+                    </label>
                   </div>
                 </div>
               </div>
               <br>
-              <!-- Busy Rules -->
+              <!-- Play Options -->
               <div class="uk-panel-box">
                 <div class="uk-grid uk-grid-small">
-                  <div class="uk-width-1-1">
-                    When busy...
-                  </div>
-                </div>
-                <div class="uk-grid uk-grid-small">
                   <div class="uk-width-1-4">
-                    <input type="checkbox" class="uk-checkbox" id="form-time-busy-play">
-                    <label for="form-time-busy-play">Play</label>
+                    <input type="radio" id="form-always-play" name="radio-always-action">
+                    <label for="form-always-play">Play message or custom audio.</label>
                   </div>
                   <div class="uk-width-1-4">
-                      <select class="uk-form-large uk-form-width-large">
-                        <option>Text</option>
-                        <option>Audio</option>
-                      </select>
+                    <select class="uk-form-large uk-form-width-large">
+                      <option>Text</option>
+                      <option>Audio</option>
+                    </select>
                   </div>
                   <div class="uk-width-1-2">
-                    <input type="text" id="form-time-busy-play-data" class="uk-form-large uk-form-width-large" placeholder="Enter message to play to caller"></input>
+                    <input type="text" id="form-always-play-data" class="uk-form-large uk-form-width-large" placeholder="Enter message to play to caller"></input>
                   </div>
                 </div>
                 <div class="uk-grid uk-grid-small">
-                  <div class="uk-width-1-1">
-                    <input type="checkbox" class="uk-checkbox" id="form-time-busy-take-message">
-                    <label for="form-time-busy-take-message">Take Message</label>
+                  <div class="uk-width-1-4"></div>
+                  <div class="uk-width-3-4">
+                    <input type="checkbox" id="form-always-take-message">
+                    <label for="form-always-take-message">Enable Voicemail</label>
                   </div>
-
                 </div>
               </div>
             </div>
           </div>
+          <br>
+          <!-- Time Condition -->
+          <input type="radio" id="form-call-condition-time" name="radio-condition">
+          <label for="form-call-condition-time" class="uk-form-label uk-text-large">Time Based</label>
+          <div class="sub-form" id="condition-time-sub-form" style="display: none;">
+            <!-- Busy Times -->
+            <div id="form-busy-times" class="uk-panel-box">
+              <div class="uk-grid uk-grid-small">
+                <div class="uk-width-3-4">
+                  Enter busy times:
+                </div>
+                <div class="uk-width-1-4 uk-flex uk-flex-space-between">
+                  <h3><!-- Dummy element for flex --></h3>
+                  <button id="button-add-busy-time" class="uk-button uk-button-success uk-flex-right">+</button>
+                </div>
+              </div>
+              <div class="uk-grid uk-grid-small">
+                <div class="uk-width-1-3 uk-form-icon">
+                  <input type="text" placeholder="Start time" data-uk-timepicker>
+                </div>
+                <div class="uk-width-1-3 uk-form-icon">
+                  <input type="text" placeholder="End time" data-uk-timepicker>
+                </div>
+                <div class="uk-width-1-3">
+                  <input type="text" placeholder="Label">
+                </div>
+              </div>
+            </div>
+            <br>
+            <!-- Busy Rules -->
+            <div class="uk-panel-box">
+              <div class="uk-grid uk-grid-small">
+                <div class="uk-width-1-1">
+                  When busy...
+                </div>
+              </div>
+              <div class="uk-grid uk-grid-small">
+                <div class="uk-width-1-4">
+                  <input type="checkbox" class="uk-checkbox" id="form-time-busy-play">
+                  <label for="form-time-busy-play">Play message or custom audio.</label>
+                </div>
+                <div class="uk-width-1-4">
+                    <select class="uk-form-large uk-form-width-large">
+                      <option>Text</option>
+                      <option>Audio</option>
+                    </select>
+                </div>
+                <div class="uk-width-1-2">
+                  <input type="text" id="form-time-busy-play-data" class="uk-form-large uk-form-width-large" placeholder="Enter message to play to caller"></input>
+                </div>
+              </div>
+              <div class="uk-grid uk-grid-small">
+                <div class="uk-width-1-1">
+                  <input type="checkbox" class="uk-checkbox" id="form-time-busy-take-message">
+                  <label for="form-time-busy-take-message">Enable Voicemail</label>
+                </div>
+
+              </div>
+            </div>
+          </div>
         </div>
-      </form>
+      </div>
+    </form>
+    <div class="uk-modal-footer uk-text-right">
+      <button type="button" class="uk-button">Cancel</button>
+      <button type="button" class="uk-button uk-button-primary">Save</button>
+    </div>
   </div>
 </div>
