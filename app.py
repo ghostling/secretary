@@ -90,13 +90,16 @@ def create_response(response_rules, resp):
     print str(resp)
     return resp
 
-
 @app.route("/handle-recording", methods=["GET", "POST"])
 def handle_recording():
     """ Takes the voicemail and saves it somewhere so that the boss can listen
         to it if she pleases. """
     recording_url = request.values.get("RecordingUrl", None)
     # TODO: Save and add this recording somewhere like a dashboard.
+
+@app.route("/create-rule", methods=["POST"])
+def create_rule():
+    pass
 
 if __name__ == "__main__":
     app.run()
