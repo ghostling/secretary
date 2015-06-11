@@ -1,7 +1,7 @@
 import os
 
 from datetime import datetime
-from flask import Flask, Response, request, render_template, url_for
+from flask import Flask, Response, request, render_template, url_for, make_response
 from firebase import firebase
 from pytz import timezone
 from twilio import twiml
@@ -31,7 +31,7 @@ def index():
     twilio_number = fb.get("/twilio-number", None)
     personal_number = fb.get("/personal-number", None)
 
-    return render_template("index.html", 
+    return render_template("index.html",
             twilioNumber=twilio_number,
             personalNumber=personal_number)
 
@@ -99,7 +99,10 @@ def handle_recording():
 
 @app.route("/create-rule", methods=["POST"])
 def create_rule():
-    pass
+    rule = eval(request.form.keys()[0])
+    number = rule.keys()[0]
+    fb.put('/rules', number, rule[number])
+    return make_response('', 200)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

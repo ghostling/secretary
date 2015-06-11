@@ -24,6 +24,17 @@ function addNewBusyTimeRows() {
     });
 };
 
+function sendNewRuleToFlask(json_data) {
+    $.ajax({
+        type: "POST",
+        url: "/create-rule",
+        data: json_data,
+        complete: function() {
+            console.log("complete sending data to flask");
+        },
+    });
+};
+
 function bindCreateAlwaysRule() {
     var redirect_url= document.location.href;
 
@@ -58,6 +69,7 @@ function bindCreateAlwaysRule() {
         complete_rule = {};
         complete_rule[caller_number] = always_rule;
         always_rule_json = JSON.stringify(complete_rule);
+        sendNewRuleToFlask(always_rule_json);
     });
 };
 
@@ -109,6 +121,7 @@ function bindCreateTimeRule() {
         complete_rule = {};
         complete_rule[caller_number] = time_rule;
         time_rule_json = JSON.stringify(complete_rule);
+        sendNewRuleToFlask(always_rule_json);
     });
 };
 
