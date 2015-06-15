@@ -75,10 +75,11 @@ def is_time_in_interval(interval):
     return start <= t and t <= end
 
 def get_rule_for_call(request):
-    from_number = request.values.get("From", None)
+    from_number = request.values.get("From", None)[2:]
+    print from_number
     caller_rule = fb.get("/rules/"+from_number, None)
-
-    if caller_rule:
+    print caller_rule
+    if caller_rule and caller_rule.get("is_active"):
         return caller_rule
     return fb.get("/rules/*", None) # The everyone else rule.
 
@@ -94,9 +95,21 @@ def create_response(response_rules, resp):
 
 @app.route("/create-rule", methods=["POST"])
 def create_rule():
-    rule = eval(request.form.keys()[0])
+    rule = eval(request.form.keys()[0]) # TODO: Why did I use eval??
     number = rule.keys()[0]
-    fb.put('/rules', number, rule[number])
+    fb.put("/rules", number, rule[number])
+    return make_response('', 200)
+
+@app.route("/enable-rule", methods=["POST"])
+def enable_rule():
+    number = request.form["number"]
+    fb.put("/rules/"+number, "is_active", 1)
+    return make_response('', 200)
+
+@app.route("/disable-rule", methods=["POST"])
+def disable_rule():
+    number = request.form["number"]
+    fb.put("/rules/"+number, "is_active", 0)
     return make_response('', 200)
 
 if __name__ == "__main__":

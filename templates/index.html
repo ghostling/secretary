@@ -64,13 +64,28 @@
               </tr>
             </thead>
             <tbody>
-              {% for rule in rules %}
+              {% for number in rules %}
               <tr>
-                <td>{{rule}}</td>
-                <td>{{rules[rule].condition}}</td>
-                <td>{{rules[rule].response}}</td>
-                <td>{{rules[rule].take_message}}</td>
-                <td>{{rules[rule].is_active}}</td>
+                <td>
+                  {{number}}
+                  {% if number == "*" %}
+                  (Everyone else)
+                  {% endif %}
+                </td>
+                <td>{{rules[number].condition}}</td>
+                <td>{{rules[number].response}}</td>
+                <td>{{rules[number].take_message}}</td>
+                <td>
+                  {% if rules[number].is_active %}
+                  {% if number == "*" %}
+                    <input type="checkbox" class="uk-checkbox rule-is-active" checked disabled>
+                    {% else %}
+                    <input type="checkbox" class="uk-checkbox rule-is-active" data-number="{{number}}" checked>
+                    {% endif %}
+                    {% else %}
+                    <input type="checkbox" class="uk-checkbox rule-is-active" data-number="{{number}}">
+                  {% endif %}
+                </td>
               </tr>
               {% endfor %}
             </tbody>

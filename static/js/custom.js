@@ -35,6 +35,7 @@ function sendNewRuleToFlask(json_data) {
     });
 };
 
+// Parsing and handling for the "always" rule form.
 function bindCreateAlwaysRule() {
     var redirect_url= document.location.href;
 
@@ -65,6 +66,8 @@ function bindCreateAlwaysRule() {
             }
         }
 
+        always_rule.is_active = 1;
+
         // Assigns rule to specified caller number.
         complete_rule = {};
         complete_rule[caller_number] = always_rule;
@@ -73,6 +76,7 @@ function bindCreateAlwaysRule() {
     });
 };
 
+// Parsing and handling for the "time" rule form.
 function bindCreateTimeRule() {
     var redirect_url= document.location.href;
     $("#condition-time-form").submit(function (e) {
@@ -117,6 +121,8 @@ function bindCreateTimeRule() {
             time_rule.take_message = 0;
         }
 
+        always_rule.is_active = 1;
+
         // Assigns rule to specified caller number.
         complete_rule = {};
         complete_rule[caller_number] = time_rule;
@@ -125,12 +131,38 @@ function bindCreateTimeRule() {
     });
 };
 
+// Toggling the "Active" checkbox next to a rule will change its state.
+function toggleNumberActiveState() {
+    $(".rule-is-active").change( function() {
+        if ($(this).is(":checked")) { 
+            var number = $(this)[0].dataset.number;
+            $.ajax({
+                type: "POST",
+                url: "/enable-rule",
+                data: {number:number},
+                complete: function() {
+                },
+    });
+        } else {
+            console.log($(this));
+            var number = $(this)[0].dataset.number;
+            $.ajax({
+                type: "POST",
+                url: "/disable-rule",
+                data: {number:number},
+                complete: function() {
+                },
+            });
+        }
+    });
+};
+
 function main() {
     bindToggleToCreateRuleCondition();
     addNewBusyTimeRows();
-    //postCreateRuleForm();
     bindCreateAlwaysRule();
     bindCreateTimeRule();
+    toggleNumberActiveState();
 };
 
 main();
