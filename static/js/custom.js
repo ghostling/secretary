@@ -30,7 +30,7 @@ function sendNewRuleToFlask(json_data) {
         url: "/create-rule",
         data: json_data,
         complete: function() {
-            console.log("complete sending data to flask");
+            location.reload();
         },
     });
 };

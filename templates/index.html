@@ -57,16 +57,22 @@
             <thead>
               <tr>
                 <th>Caller Number</th>
-                <th>Action(s)</th>
+                <th>Condition</th>
+                <th>Response</th>
+                <th>Take Message</th>
                 <th>Active</th>
               </tr>
             </thead>
             <tbody>
+              {% for rule in rules %}
               <tr>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
+                <td>{{rule}}</td>
+                <td>{{rules[rule].condition}}</td>
+                <td>{{rules[rule].response}}</td>
+                <td>{{rules[rule].take_message}}</td>
+                <td>{{rules[rule].is_active}}</td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>

@@ -1,4 +1,5 @@
 import os
+import json
 
 from datetime import datetime
 from flask import Flask, Response, request, render_template, url_for, make_response
@@ -30,10 +31,12 @@ app = Flask(__name__)
 def index():
     twilio_number = fb.get("/twilio-number", None)
     personal_number = fb.get("/personal-number", None)
+    rules = fb.get("/rules", None)
 
     return render_template("index.html",
             twilioNumber=twilio_number,
-            personalNumber=personal_number)
+            personalNumber=personal_number,
+            rules=rules)
 
 @app.route("/secretary", methods=["POST"])
 def secretary():
@@ -71,31 +74,21 @@ def is_time_in_interval(interval):
 
 def get_rule_for_call(request):
     from_number = request.values.get("From", None)
-    caller_rule = {}
-    # Load the rule to execute for this caller.
-    if from_number in TEST_RULES:
-        caller_rule = TEST_RULES[from_number]
-    else:
-        caller_rule = TEST_RULES["*"] # The everyone else rule.
-    return caller_rule
+    caller_rule = fb.get("/rules/"+from_number, None)
+
+    if caller_rule:
+        return caller_rule
+    return fb.get("/rules/*", None) # The everyone else rule.
 
 def create_response(response_rules, resp):
     """ Plays a specified mp3 if our response should be audio, otherwise, let
         the robot voice speak some text. """
-    print response_rules
     if response_rules["type"] == "text":
         resp.say(response_rules["data"])
     elif response_rules["type"] == "audio":
-        resp.play("http://7cfc6ecc.ngrok.io/"+response_rules["data"])
-    print str(resp)
+        resp.say("An audio message should play later.")
+        #resp.play("http://7cfc6ecc.ngrok.io/"+response_rules["data"])
     return resp
-
-@app.route("/handle-recording", methods=["GET", "POST"])
-def handle_recording():
-    """ Takes the voicemail and saves it somewhere so that the boss can listen
-        to it if she pleases. """
-    recording_url = request.values.get("RecordingUrl", None)
-    # TODO: Save and add this recording somewhere like a dashboard.
 
 @app.route("/create-rule", methods=["POST"])
 def create_rule():
