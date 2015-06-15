@@ -16,26 +16,25 @@ TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_NUMBER = os.environ.get("TWILIO_NUMBER")
 FIREBASE_SECRET = os.environ.get("FIREBASE_SECRET")
 
-# Timezone of user (Twilio number owner).
-USER_TIMEZONE = timezone('US/Pacific')
-
 # Create an authenticated client to make requests to Twilio.
 client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 # Connect to Firebase
 fb = firebase.FirebaseApplication("https://twilio-secretary.firebaseio.com", None)
 
+# Timezone of user (Twilio number owner).
+USER_TIMEZONE = timezone('US/Pacific')
+USER_REAL_NUMBER = fb.get("/personal-number", None)
+
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
-    twilio_number = fb.get("/twilio-number", None)
-    personal_number = fb.get("/personal-number", None)
     rules = fb.get("/rules", None)
 
     return render_template("index.html",
-            twilioNumber=twilio_number,
-            personalNumber=personal_number,
+            twilioNumber=TWILIO_NUMBER,
+            personalNumber=USER_REAL_NUMBER,
             rules=rules)
 
 @app.route("/secretary", methods=["POST"])
@@ -48,16 +47,19 @@ def secretary():
 
     caller_rule = get_rule_for_call(request)
 
-    if caller_rule["condition"] == "always":
-        resp = create_response(caller_rule["response"], resp)
-    elif caller_rule["condition"] == "time":
-        for interval in caller_rule["busy_intervals"]:
+    if caller_rule.get("condition") == "always":
+        if caller_rule.get("forward"):
+            resp.dial(USER_REAL_NUMBER)
+        else:
+            resp = create_response(caller_rule.get("response"), resp)
+    elif caller_rule.get("condition") == "time":
+        for interval in caller_rule.get("busy_intervals"):
             if is_time_in_interval(interval):
-                resp.say("I am currently " + interval["label"])
+                resp.say("I am currently " + interval.get("label"))
             else:
-                resp.dial("+19193608311")
+                resp.dial(USER_REAL_NUMBER)
 
-    if caller_rule["take_message"]:
+    if caller_rule.get("take_message"):
         resp.say("Leave a message after the tone. Please press pound \
                 when you're done.")
         resp.record(playBeep=True, maxLength="90", finishOnKey="#")
@@ -67,8 +69,8 @@ def is_time_in_interval(interval):
     current_local_time = datetime.now(USER_TIMEZONE)
     standardized_time = datetime.strptime(
             current_local_time.strftime("%X"), "%X")
-    start_time = datetime.strptime(interval["start"], "%X")
-    end_time = datetime.strptime(interval["end"], "%X")
+    start_time = datetime.strptime(interval.get("start"), "%X")
+    end_time = datetime.strptime(interval.get("end"), "%X")
 
     return start <= t and t <= end
 
@@ -83,9 +85,9 @@ def get_rule_for_call(request):
 def create_response(response_rules, resp):
     """ Plays a specified mp3 if our response should be audio, otherwise, let
         the robot voice speak some text. """
-    if response_rules["type"] == "text":
-        resp.say(response_rules["data"])
-    elif response_rules["type"] == "audio":
+    if response_rules.get("type") == "text":
+        resp.say(response_rules.get("data"))
+    elif response_rules.get("type") == "audio":
         resp.say("An audio message should play later.")
         #resp.play("http://7cfc6ecc.ngrok.io/"+response_rules["data"])
     return resp
