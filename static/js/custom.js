@@ -51,11 +51,12 @@ function bindCreateAlwaysRule() {
             // What to play
             var play_type = $("#form-always-play-type :selected").attr("id");
             if (play_type == "form-always-play-text") {
-                var text_to_play = $("#form-always-play-data").val();
+                var text_to_play = $("#always-data-text").val();
                 always_rule.response = { "data" : text_to_play, "type" : "text" };
             } else if (play_type == "form-always-play-audio") {
-                // TODO: Implement later.
-                console.log("Audio not currently supported.")
+                // TODO: Actually make this work.
+                var selectedMp3 = $("#always-upload-select")[0].files[0];
+                always_rule.response = { "data" : selectedMp3, "type" : "audio" };
             }
 
             // Take message or not
@@ -106,11 +107,12 @@ function bindCreateTimeRule() {
             // What to play
             var play_type = $("#form-time-busy-play-type :selected").attr("id");
             if (play_type == "form-time-busy-play-text") {
-                var text_to_play = $("#form-time-busy-play-data").val();
+                var text_to_play = $("#time-data-text").val();
                 time_rule.response = { "data" : text_to_play, "type" : "text" };
             } else if (play_type == "#form-time-busy-play-audio") {
-                // TODO: Implement later.
-                console.log("Audio not currently supported.")
+                // TODO: Actually make this work.
+                var selectedMp3 = $("#time-upload-select")[0].files[0];
+                always_rule.response = { "data" : selectedMp3, "type" : "audio" };
             }
         }
 
@@ -134,7 +136,7 @@ function bindCreateTimeRule() {
 // Toggling the "Active" checkbox next to a rule will change its state.
 function toggleNumberActiveState() {
     $(".rule-is-active").change( function() {
-        if ($(this).is(":checked")) { 
+        if ($(this).is(":checked")) {
             var number = $(this)[0].dataset.number;
             $.ajax({
                 type: "POST",
@@ -157,12 +159,38 @@ function toggleNumberActiveState() {
     });
 };
 
+function toggleDataInput() {
+    $("#form-always-play-type").change(function() {
+        var play_type = $("#form-always-play-type :selected").attr("id");
+        if (play_type == "form-always-play-text") {
+            $("#always-data-text").removeClass("uk-hidden");
+            $("#always-data-audio").addClass("uk-hidden");
+        } else {
+            $("#always-data-audio").removeClass("uk-hidden");
+            $("#always-data-text").addClass("uk-hidden");
+        }
+    });
+
+    $("#form-time-busy-play-type").change(function() {
+        var play_type = $("#form-time-busy-play-type :selected").attr("id");
+        if (play_type == "form-time-busy-play-text") {
+            $("#time-data-text").removeClass("uk-hidden");
+            $("#time-data-audio").addClass("uk-hidden");
+        } else {
+            $("#time-data-audio").removeClass("uk-hidden");
+            $("#time-data-text").addClass("uk-hidden");
+        }
+    });
+};
+
 function main() {
     bindToggleToCreateRuleCondition();
     addNewBusyTimeRows();
     bindCreateAlwaysRule();
     bindCreateTimeRule();
     toggleNumberActiveState();
+
+    toggleDataInput();
 };
 
 main();
