@@ -123,13 +123,13 @@ function bindCreateTimeRule() {
             time_rule.take_message = 0;
         }
 
-        always_rule.is_active = 1;
+        time_rule.is_active = 1;
 
         // Assigns rule to specified caller number.
         complete_rule = {};
         complete_rule[caller_number] = time_rule;
         time_rule_json = JSON.stringify(complete_rule);
-        sendNewRuleToFlask(always_rule_json);
+        sendNewRuleToFlask(time_rule_json);
     });
 };
 
@@ -146,7 +146,6 @@ function toggleNumberActiveState() {
                 },
     });
         } else {
-            console.log($(this));
             var number = $(this)[0].dataset.number;
             $.ajax({
                 type: "POST",

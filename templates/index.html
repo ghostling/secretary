@@ -50,16 +50,15 @@
       <div class="uk-block">
         <div class="uk-container">
           <div class="uk-flex uk-flex-top uk-flex-space-between">
-            <h1>Rules</h1>
+            <h1>Caller Rules</h1>
             <button class="uk-button uk-button-success uk-button-large uk-flex-right" data-uk-modal="{target:'#create-rule-modal'}">+ Create</button>
             {% include 'create_rule_modal.html' %}
           </div>
           <table class="uk-table uk-table-striped">
-            <thead>
+            <thead class="uk-block-primary uk-contrast">
               <tr>
                 <th>Caller Number</th>
-                <th>Condition</th>
-                <th>Response</th>
+                <th>Action</th>
                 <th>Take Message</th>
                 <th>Active</th>
               </tr>
@@ -73,9 +72,39 @@
                   (Everyone else)
                   {% endif %}
                 </td>
-                <td>{{rules[number].condition}}</td>
-                <td>{{rules[number].response}}</td>
-                <td>{{rules[number].take_message}}</td>
+                <td>
+                  {% if rules[number].condition == "always" %}
+                    {% if rules[number].forward %}
+                      <strong>Always</strong> forward to your real number.
+                    {% elif rules[number].response.type == "text" %}
+                      <strong>Always</strong> reply with 
+                      "{{rules[number].response.data}}".
+                    {% else %} {# audio #}
+                      <strong>Always</strong> play this file:
+                      <audio src="{{rules[number].response.data}}"></audio>
+                    {% endif %}
+                  {% else %} {# time rule #}
+                    During these times: 
+                    <div class="time-list">
+                      {% for inter in rules[number].busy_intervals %}
+                        {{inter.label}}: {{inter.start}}-{{inter.end}}<br>
+                      {% endfor %}
+                    </div>
+                    {% if rules[number].response.type == "text" %}
+                      Reply with "{{rules[number].response.data}}".
+                      {% else %} {# audio #}
+                      Play this file: 
+                      <audio src="{{rules[number].response.data}}"></audio>
+                    {% endif %}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if rules[number].take_message %}
+                    Yes
+                  {% else %}
+                    No
+                  {% endif %}
+                </td>
                 <td>
                   {% if rules[number].is_active %}
                   {% if number == "*" %}
