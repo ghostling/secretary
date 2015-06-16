@@ -53,26 +53,36 @@ def secretary():
         else:
             resp = create_response(caller_rule.get("response"), resp)
     elif caller_rule.get("condition") == "time":
+        busy = False
         for interval in caller_rule.get("busy_intervals"):
             if is_time_in_interval(interval):
+                busy = True
                 resp.say("I am currently " + interval.get("label"))
-            else:
-                resp.dial(USER_REAL_NUMBER)
+                break
+        if not busy:
+            resp.dial(USER_REAL_NUMBER)
 
     if caller_rule.get("take_message"):
         resp.say("Leave a message after the tone. Please press pound \
                 when you're done.")
-        resp.record(playBeep=True, maxLength="90", finishOnKey="#")
+        resp.record(playBeep=True, maxLength="90", finishOnKey="#", action="/handle-recording")
+    return str(resp)
+
+@app.route("/handle-recording", methods=["POST"])
+def handle_recording():
+    resp = twiml.Response()
+    resp.say("Thanks for the message. I'll get back to you later. Good bye.")
     return str(resp)
 
 def is_time_in_interval(interval):
     current_local_time = datetime.now(USER_TIMEZONE)
-    standardized_time = datetime.strptime(
+    now_time = datetime.strptime(
             current_local_time.strftime("%X"), "%X")
-    start_time = datetime.strptime(interval.get("start"), "%X")
-    end_time = datetime.strptime(interval.get("end"), "%X")
+    start_time = datetime.strptime(interval.get("start"), "%H:%M")
+    end_time = datetime.strptime(interval.get("end"), "%H:%M")
+    print now_time, start_time, end_time
 
-    return start <= t and t <= end
+    return start_time <= now_time and now_time <= end_time
 
 def get_rule_for_call(request):
     from_number = request.values.get("From", None)[2:]
@@ -90,12 +100,11 @@ def create_response(response_rules, resp):
         resp.say(response_rules.get("data"))
     elif response_rules.get("type") == "audio":
         resp.say("An audio message should play later.")
-        #resp.play("http://7cfc6ecc.ngrok.io/"+response_rules["data"])
     return resp
 
 @app.route("/create-rule", methods=["POST"])
 def create_rule():
-    rule = eval(request.form.keys()[0]) # TODO: Why did I use eval??
+    rule = eval(request.form.keys()[0])
     number = rule.keys()[0]
     fb.put("/rules", number, rule[number])
     return make_response('', 200)

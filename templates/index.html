@@ -89,11 +89,13 @@
                         {{inter.label}}: {{inter.start}}-{{inter.end}}<br>
                       {% endfor %}
                     </div>
-                    {% if rules[number].response.type == "text" %}
-                      Reply with "{{rules[number].response.data}}".
-                      {% else %} {# audio #}
-                      Play this file:
-                      <audio src="{{rules[number].response.data}}"></audio>
+                    {% if rules[number].response %}
+                      {% if rules[number].response.type == "text" %}
+                        Reply with "{{rules[number].response.data}}".
+                        {% else %} {# audio #}
+                        Play this file:
+                        <audio src="{{rules[number].response.data}}"></audio>
+                      {% endif %}
                     {% endif %}
                   {% endif %}
                 </td>
