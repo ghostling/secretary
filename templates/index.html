@@ -28,7 +28,6 @@
         <div class="uk-container">
           <div class="uk-flex uk-flex-top uk-flex-space-between">
             <h2>Number Settings</h2>
-            <button class="uk-button uk-button-large uk-flex-right">Update</button>
           </div>
           <form class="uk-form uk-form-horizontal">
             <div class="uk-form-row">
@@ -40,7 +39,7 @@
             <div class="uk-form-row">
               <label class="uk-form-label" for="form-real-number">Your Number</label>
               <div class="uk-form-controls">
-                <input type="text" id="form-real-number" value="{{personalNumber}}" class="uk-form-large uk-form-width-large" placeholder="Enter your real number">
+                <input type="text" id="form-real-number" value="{{personalNumber}}" class="uk-form-large uk-form-width-large" placeholder="Enter your real number" disabled>
               </div>
             </div>
           </form>
@@ -77,14 +76,14 @@
                     {% if rules[number].forward %}
                       <strong>Always</strong> forward to your real number.
                     {% elif rules[number].response.type == "text" %}
-                      <strong>Always</strong> reply with 
+                      <strong>Always</strong> reply with
                       "{{rules[number].response.data}}".
                     {% else %} {# audio #}
                       <strong>Always</strong> play this file:
                       <audio src="{{rules[number].response.data}}"></audio>
                     {% endif %}
                   {% else %} {# time rule #}
-                    During these times: 
+                    During these times:
                     <div class="time-list">
                       {% for inter in rules[number].busy_intervals %}
                         {{inter.label}}: {{inter.start}}-{{inter.end}}<br>
@@ -93,7 +92,7 @@
                     {% if rules[number].response.type == "text" %}
                       Reply with "{{rules[number].response.data}}".
                       {% else %} {# audio #}
-                      Play this file: 
+                      Play this file:
                       <audio src="{{rules[number].response.data}}"></audio>
                     {% endif %}
                   {% endif %}
