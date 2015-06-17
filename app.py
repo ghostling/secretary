@@ -15,12 +15,15 @@ TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_NUMBER = os.environ.get("TWILIO_NUMBER")[2:]
 FIREBASE_SECRET = os.environ.get("FIREBASE_SECRET")
+FIREBASE_EMAIL = os.environ.get("FIREBASE_EMAIL")
 
 # Create an authenticated client to make requests to Twilio.
 client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 # Connect to Firebase
 fb = firebase.FirebaseApplication("https://twilio-secretary.firebaseio.com", None)
+auth = firebase.FirebaseAuthentication(FIREBASE_SECRET, FIREBASE_EMAIL, debug=False, admin=True)
+fb.authentication = auth
 
 # Timezone of user (Twilio number owner).
 USER_TIMEZONE = timezone('US/Pacific')
@@ -65,13 +68,16 @@ def secretary():
     if caller_rule.get("take_message"):
         resp.say("Leave a message after the tone. Please press pound \
                 when you're done.")
-        resp.record(playBeep=True, maxLength="90", finishOnKey="#", action="/handle-recording")
+        resp.record(playBeep=True, maxLength="90", finishOnKey="#", action="/handle-recording/"+caller_rule.get("caller_name").replace(" ", ""))
     return str(resp)
 
-@app.route("/handle-recording", methods=["POST"])
-def handle_recording():
+@app.route("/handle-recording/<name>", methods=["POST"])
+def handle_recording(name=None):
     resp = twiml.Response()
-    resp.say("Thanks for the message. I'll get back to you later. Good bye.")
+    resp.say("Thanks for the message. I'll let Jessie know you called.")
+    if not name:
+        name = "Someone"
+    message = client.messages.create(to=USER_REAL_NUMBER, from_=TWILIO_NUMBER, body="Secretary: "+name+" left you a voicemail.")
     return str(resp)
 
 def is_time_in_interval(interval):
