@@ -1,13 +1,3 @@
-
-// Toggle visibility of subforms for "always"/"time based" conditions
-// of a rule.
-function bindToggleToCreateRuleCondition() {
-    $("input[name='radio-condition']").click(function() {
-        $("#condition-always-sub-form").toggle()
-        $("#condition-time-sub-form").toggle()
-    });
-};
-
 // "+" Button: Add more rows under "Busy times"
 // TODO: Make this nicer...later.
 function addNewBusyTimeRows() {
@@ -24,6 +14,7 @@ function addNewBusyTimeRows() {
     });
 };
 
+// Takes a cleaned up json and packages it to be created.
 function sendNewRuleToFlask(json_data) {
     $.ajax({
         type: "POST",
@@ -168,6 +159,7 @@ function toggleNumberActiveState() {
     });
 };
 
+// Note: This is currently not being used.
 function toggleDataInput() {
     $("#form-always-play-type").change(function() {
         var play_type = $("#form-always-play-type :selected").attr("id");
@@ -193,12 +185,10 @@ function toggleDataInput() {
 };
 
 function main() {
-    bindToggleToCreateRuleCondition();
     addNewBusyTimeRows();
     bindCreateAlwaysRule();
     bindCreateTimeRule();
     toggleNumberActiveState();
-
     toggleDataInput();
 };
 
