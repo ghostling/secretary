@@ -31,6 +31,18 @@
     background: #fcf0e3;
 }
 
-.uk-block-primary {
+.uk-block-primary,
+.button-red {
     background: #ff3300;
+}
+
+.uk-block {
+    padding: 20px 0px;
+}
+
+.call-me-maybe {
+    color: #ff3300;
+    font: 48px Consolas,monospace,serif;
+    padding: 10px;
+    padding-bottom: 50px;
 }
