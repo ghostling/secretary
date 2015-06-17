@@ -11,7 +11,6 @@ from twilio.rest import TwilioRestClient
 from testdata import TEST_RULES
 
 # Pull in configuration from system environment variables
-TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 FIREBASE_SECRET = os.environ.get("FIREBASE_SECRET")
 
@@ -58,7 +57,9 @@ def update_numbers():
 @app.route("/twilio-connect", methods=["GET","POST"])
 def twilio_connect():
     sid = request.values.get("AccountSid", None)
-    session["account_sid"] = sid
+    client = TwilioRestClient(sid, TWILIO_AUTH_TOKEN)
+    acc_sid = client.accounts.list()[0].sid
+    session["account_sid"] = acc_sid
 
     if not fb.get("/" + sid, None):
         fb.put("/", sid, {"acc_sid": session["account_sid"]})
@@ -72,11 +73,12 @@ def twilio_disconnect():
     session.pop("account_sid", None)
     return redirect(url_for("index"))
 
-@app.route("/secretary", methods=["POST"])
-def secretary():
+@app.route("/secretary/<int:sec_number>", methods=["POST","GET"])
+def secretary(sec_number):
     """ The core of the application. Handles a phone call through Twilio and
         responds to it appropriately by predefined rules for the specific
         caller or all other callers. """
+    acc_sid = request.values.get("AccountSid")
 
     resp = twiml.Response()
 
@@ -120,13 +122,12 @@ def is_time_in_interval(interval):
     return start_time <= now_time and now_time <= end_time
 
 def get_rule_for_call(request):
+    acc_sid = request.values.get("AccountSid")
     from_number = request.values.get("From", None)[2:]
-    print from_number
-    caller_rule = fb.get("/"+session["account_sid"]+"/rules/"+from_number, None)
-    print caller_rule
+    caller_rule = fb.get("/"+acc_sid+"/rules/"+from_number, None)
     if caller_rule and caller_rule.get("is_active"):
         return caller_rule
-    return fb.get("/"+session["account_sid"]+"/rules/*", None) # The everyone else rule.
+    return fb.get("/"+acc_sid+"/rules/*", None) # The everyone else rule.
 
 def create_response(response_rules, resp):
     """ Plays a specified mp3 if our response should be audio, otherwise, let
