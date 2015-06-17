@@ -26,3 +26,11 @@
     font: 16px Consolas,monospace,serif;
     margin: 10px;
 }
+
+.top {
+    background: #fcf0e3;
+}
+
+.uk-block-primary {
+    background: #ff3300;
+}

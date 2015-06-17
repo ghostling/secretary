@@ -13,7 +13,7 @@ from testdata import TEST_RULES
 # Pull in configuration from system environment variables
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
-TWILIO_NUMBER = os.environ.get("TWILIO_NUMBER")
+TWILIO_NUMBER = os.environ.get("TWILIO_NUMBER")[2:]
 FIREBASE_SECRET = os.environ.get("FIREBASE_SECRET")
 
 # Create an authenticated client to make requests to Twilio.
@@ -57,7 +57,7 @@ def secretary():
         for interval in caller_rule.get("busy_intervals"):
             if is_time_in_interval(interval):
                 busy = True
-                resp.say("I am currently " + interval.get("label"))
+                resp.say(interval.get("label"))
                 break
         if not busy:
             resp.dial(USER_REAL_NUMBER)

@@ -37,8 +37,12 @@
               <div class="uk-grid uk-grid-small">
                 <div class="uk-width-1-4 uk-form-controls">
                   <input type="radio" id="form-always-play" name="radio-always-action">
-                  <label for="form-always-play">Play message or custom audio.</label>
+                  <label for="form-always-play">Play message.</label>
                 </div>
+                <div class="uk-width-3-4 uk-form-controls">
+                  <input type="text" id="always-data-text" class="uk-form-large uk-form-width-large" placeholder="Enter message to play to caller"></input>
+                </div>
+                <!--
                 <div class="uk-width-1-4 uk-form-controls">
                   <select id="form-always-play-type" class="uk-form-large uk-form-width-large">
                     <option id="form-always-play-text">Text</option>
@@ -51,6 +55,7 @@
                     <input id="always-upload-select" type="file">
                   </a>
                 </div>
+                -->
               </div>
               <div class="uk-grid uk-grid-small">
                 <div class="uk-width-1-4"></div>
@@ -85,7 +90,7 @@
                     <input type="text" placeholder="End time" class="end-time" data-uk-timepicker>
                   </div>
                   <div class="uk-width-1-3">
-                    <input type="text" class="label" placeholder="Label">
+                    <input type="text" class="label" placeholder="Message">
                   </div>
                 </div>
                 {# End "busy entry" row. #}
@@ -93,25 +98,6 @@
             </div>
             <br>
             <div class="uk-panel-box uk-form-row">
-              When busy...<br><br>
-              <div class="uk-grid uk-grid-small">
-                <div class="uk-width-1-4">
-                  <input type="checkbox" class="uk-checkbox" id="form-time-busy-play">
-                  <label for="form-time-busy-play">Play message or custom audio.</label>
-                </div>
-                <div class="uk-width-1-4">
-                    <select id="form-time-busy-play-type" class="uk-form-large uk-form-width-large">
-                      <option id="form-time-busy-play-text">Text</option>
-                      <option id="form-time-busy-play-audio">Audio</option>
-                    </select>
-                </div>
-                <div class="uk-width-1-2">
-                  <input type="text" id="time-data-text" class="uk-form-large uk-form-width-large" placeholder="Enter message to play to caller"></input>
-                  <a class="uk-form-file uk-hidden" id="time-data-audio">
-                    <input id="time-upload-select" type="file">
-                  </a>
-                </div>
-              </div>
               <div class="uk-grid uk-grid-small">
                 <div class="uk-width-1-1">
                   <input type="checkbox" class="uk-checkbox" id="form-time-busy-take-message">

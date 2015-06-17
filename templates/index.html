@@ -16,15 +16,17 @@
     <title>Secretary</title>
   </head>
   <body>
-    <nav class="uk-navbar">
-      <a class="uk-navbar-brand" href="#"><strong>Secretary</strong></a>
+    <nav class="uk-navbar uk-block-primary uk-contrast">
+      <a class="uk-navbar-brand uk-contrast" href="#">Twilio Secretary</a>
       <div class="uk-navbar-flip uk-navbar-content uk-display-inline-block">
-        <button class="uk-button uk-button-primary" data-uk-modal="{target: '#help-modal'}">Help</button>
+        <button class="uk-button" data-uk-modal="{target: '#help-modal'}">Help</button>
         {% include 'help_modal.html' %}
       </div>
     </nav>
     <div class="main-content">
-      <div class="uk-block uk-block-primary uk-contrast">
+      <div class="uk-block top">
+        <table><tr>
+            <td>
         <div class="uk-container">
           <div class="uk-flex uk-flex-top uk-flex-space-between">
             <h2>Number Settings</h2>
@@ -43,7 +45,9 @@
               </div>
             </div>
           </form>
-        </div>
+      </div></td>
+            <td><img src="/static/img/pusheen_secretary.png"></td>
+    </tr></table>
       </div>
       <hr>
       <div class="uk-block">
@@ -63,6 +67,7 @@
               </tr>
             </thead>
             <tbody>
+              {% if rules %}
               {% for number in rules %}
               <tr>
                 <td>
@@ -86,7 +91,7 @@
                     During these times:
                     <div class="time-list">
                       {% for inter in rules[number].busy_intervals %}
-                        {{inter.label}}: {{inter.start}}-{{inter.end}}<br>
+                      {{inter.start}}-{{inter.end}} - Say "{{inter.label}}"<br>
                       {% endfor %}
                     </div>
                     {% if rules[number].response %}
@@ -119,6 +124,7 @@
                 </td>
               </tr>
               {% endfor %}
+              {% endif %}
             </tbody>
           </table>
         </div>

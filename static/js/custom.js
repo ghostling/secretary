@@ -48,7 +48,10 @@ function bindCreateAlwaysRule() {
         if (action == "form-always-forward") {
             always_rule.forward = 1;
         } else if (action == "form-always-play") {
+            var text_to_play = $("#always-data-text").val();
+            always_rule.response = { "data" : text_to_play, "type" : "text" };
             // What to play
+            /*
             var play_type = $("#form-always-play-type :selected").attr("id");
             if (play_type == "form-always-play-text") {
                 var text_to_play = $("#always-data-text").val();
@@ -58,6 +61,7 @@ function bindCreateAlwaysRule() {
                 var selectedMp3 = $("#always-upload-select")[0].files[0];
                 always_rule.response = { "data" : selectedMp3, "type" : "audio" };
             }
+            */
 
             // Take message or not
             if ($("#form-always-take-message").is(":checked")) {
@@ -103,6 +107,7 @@ function bindCreateTimeRule() {
         }
 
         // Get busy rules
+        /*
         if ($("#form-time-busy-play").is(":checked")) {
             // What to play
             var play_type = $("#form-time-busy-play-type :selected").attr("id");
@@ -115,6 +120,7 @@ function bindCreateTimeRule() {
                 always_rule.response = { "data" : selectedMp3, "type" : "audio" };
             }
         }
+        */
 
         // Take message or not
         if ($("#form-time-busy-take-message").is(":checked")) {
