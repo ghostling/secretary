@@ -26,3 +26,15 @@
     font: 16px Consolas,monospace,serif;
     margin: 10px;
 }
+
+#twilio-connect-button {
+    background: url(https://www.twilio.com/bundles/connect-apps/img/connect-button.png);
+    width: 130px; 
+    height: 34px; 
+    display: inline-block; 
+    margin: 0 auto;
+}
+
+#twilio-connect-button:hover { 
+    background-position: 0 34px; 
+}

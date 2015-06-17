@@ -182,14 +182,30 @@ function toggleDataInput() {
     });
 };
 
+function bindUpdateNumbersButton() {
+    $("#update-numbers-button").click( function(){
+        var twilioNum = $("#form-twilio-number").val();
+        var realNum = $("#form-real-number").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/update-numbers",
+            data: {twilio_number: twilioNum, real_number: realNum},
+            complete: function() {
+                location.reload();
+            },
+        });
+    });
+};
+
 function main() {
     bindToggleToCreateRuleCondition();
     addNewBusyTimeRows();
     bindCreateAlwaysRule();
     bindCreateTimeRule();
     toggleNumberActiveState();
-
     toggleDataInput();
+    bindUpdateNumbersButton();
 };
 
 main();
