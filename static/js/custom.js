@@ -42,6 +42,8 @@ function bindCreateAlwaysRule() {
     $("#condition-always-form").submit(function (e) {
         e.preventDefault();
         var always_rule = {"condition": "always"};
+        var caller_name = $("#form-caller-name").val();
+        always_rule.caller_name = caller_name;
         var caller_number = $("#form-caller-number").val();
         var action = $("input[name='radio-always-action']:checked").attr("id");
 
@@ -87,6 +89,8 @@ function bindCreateTimeRule() {
     $("#condition-time-form").submit(function (e) {
         e.preventDefault();
         var time_rule = {"condition": "time"};
+        var caller_name = $("#form-caller-name").val();
+        time_rule.caller_name = caller_name;
         var caller_number = $("#form-caller-number").val();
 
         // Get busy times

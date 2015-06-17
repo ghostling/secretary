@@ -20,9 +20,9 @@
       <a class="uk-navbar-brand uk-contrast" href="#">Twilio Secretary</a>
       <div class="uk-navbar-flip uk-navbar-content uk-display-inline-block">
         <button class="uk-button" data-uk-modal="{target: '#help-modal'}">Help</button>
-        {% include 'help_modal.html' %}
       </div>
     </nav>
+    {% include 'help_modal.html' %}
     <div class="main-content">
       <div class="call-me-maybe uk-text-center">
         Call me maybe: <strong>(919)-338-5054</strong>
@@ -63,6 +63,7 @@
           <table class="uk-table uk-table-striped">
             <thead class="uk-block-primary uk-contrast">
               <tr>
+                <th>Name</th>
                 <th>Caller Number</th>
                 <th>Action</th>
                 <th>Take Message</th>
@@ -74,10 +75,14 @@
               {% for number in rules %}
               <tr>
                 <td>
-                  {{number}}
                   {% if number == "*" %}
-                  (Everyone else)
+                  Everyone else
+                  {% else %}
+                  {{rules[number].caller_name}}
                   {% endif %}
+                </td>
+                <td>
+                  {{number}}
                 </td>
                 <td>
                   {% if rules[number].condition == "always" %}
