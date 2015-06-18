@@ -58,14 +58,14 @@ def secretary():
         for interval in caller_rule.get("busy_intervals"):
             if is_time_in_interval(interval):
                 busy = True
-                resp.say(interval.get("label"))
+                resp.say("Hello, you have reached Jessie's secretary. She is currently busy right now. "+interval.get("label"), voice="alice", language="en-AU")
                 break
         if not busy:
             resp.dial(USER_REAL_NUMBER)
 
     if caller_rule.get("take_message"):
         resp.say("Leave a message after the tone. Please press pound \
-                when you're done.")
+                when you're done.", voice="alice", language="en-AU")
         resp.record(playBeep=True, maxLength="90", finishOnKey="#", action="/handle-recording/"+caller_rule.get("caller_name").replace(" ", ""))
     return str(resp)
 
@@ -73,8 +73,8 @@ def secretary():
 @app.route("/handle-recording/<name>", methods=["POST"])
 def handle_recording(name=None):
     resp = twiml.Response()
-    resp.say("Thanks for the message. I'll let Jessie know you called.")
-    if not name:
+    resp.say("Thanks for the message. I'll let Jessie know you called.", voice="alice", language="en-AU")
+    if name=="Everyoneelse":
         name = "Someone"
     message = client.messages.create(to=USER_REAL_NUMBER, from_=TWILIO_NUMBER, body="Secretary: "+name+" left you a voicemail.")
     return str(resp)
@@ -132,10 +132,10 @@ def create_response(response_rules, resp):
     """ Plays a specified mp3 if our response should be audio, otherwise, let
         the robot voice speak some text. """
     if response_rules.get("type") == "text":
-        resp.say(response_rules.get("data"))
+        resp.say(response_rules.get("data"), voice="alice", language="en-AU")
     elif response_rules.get("type") == "audio":
         # TODO: Implement.
-        resp.say("An audio message should play later.")
+        resp.say("An audio message should play later.", voice="alice", language="en-AU")
     return resp
 
 

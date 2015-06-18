@@ -22,7 +22,6 @@
 
 .time-list {
     overflow: scroll;
-    height: 50px;
     font: 16px Consolas,monospace,serif;
     margin: 10px;
 }
